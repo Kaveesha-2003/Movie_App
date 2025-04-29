@@ -33,6 +33,7 @@ fun AppNavigator() {
         composable("add_movies") { AddMoviesScreen() }
         composable("search_movies") { SearchMoviesScreen() }
         composable("search_actors") { SearchActorsScreen() }
+        composable("search_titles") { SearchTitlesScreen() }
 
     }
 }
@@ -67,6 +68,14 @@ fun HomeScreen(navController: NavHostController) {
         ) {
             Text("Search for Actors")
         }
+
+        Button(
+            onClick = { navController.navigate("search_titles") },
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+        ) {
+            Text("Search Titles (OMDb)")
+        }
+
 
     }
 }
