@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,19 +48,26 @@ fun AddMoviesScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(onClick = {
-                viewModel.addMovies()
-                added = true
-            }) {
+            Button(
+                onClick = {
+                    viewModel.addMovies()
+                    added = true
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF331A79), // ✅ Your color here
+                    contentColor = Color.White
+                )
+            ) {
                 Text("Add Movies to DB")
             }
 
             if (added) {
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("✅ Movies added successfully!", color = MaterialTheme.colorScheme.primary)
+                Text("Movies added successfully!", color = MaterialTheme.colorScheme.primary)
             }
         }
     }
+
 }
 
 
@@ -94,6 +102,30 @@ class AddMoviesViewModel(private val context: Context) : ViewModel() {
                     plot = "Batman has not been seen for ten years. A new breed of criminal ravages Gotham City, forcing 55-year-old Bruce Wayne back into the cape and cowl."
                 ),
                 Movie(
+                    title = "The Lord of the Rings: The Return of the King",
+                    year = "2003",
+                    rated = "PG-13",
+                    released = "17 Dec 2003",
+                    runtime = "201 min",
+                    genre = "Action, Adventure, Drama",
+                    director = "Peter Jackson",
+                    writer = "J.R.R. Tolkien, Fran Walsh, Philippa Boyens",
+                    actors = "Elijah Wood, Viggo Mortensen, Ian McKellen",
+                    plot = "Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring."
+                ),
+                Movie(
+                    title = "Inception",
+                    year = "2010",
+                    rated = "PG-13",
+                    released = "16 Jul 2010",
+                    runtime = "148 min",
+                    genre = "Action, Adventure, Sci-Fi",
+                    director = "Christopher Nolan",
+                    writer = "Christopher Nolan",
+                    actors = "Leonardo DiCaprio, Joseph Gordon-Levitt, Elliot Page",
+                    plot = "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster."
+                ),
+                Movie(
                     title = "The Matrix",
                     year = "1999",
                     rated = "R",
@@ -104,7 +136,7 @@ class AddMoviesViewModel(private val context: Context) : ViewModel() {
                     writer = "Lilly Wachowski, Lana Wachowski",
                     actors = "Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss",
                     plot = "Neo discovers the life he knows is an elaborate deception of an evil cyber-intelligence."
-                )
+                ),
                 // hardcoded movies.
             )
             movieDao.insertAll(movies)

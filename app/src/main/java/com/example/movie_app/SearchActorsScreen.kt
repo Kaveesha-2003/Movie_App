@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -66,7 +67,12 @@ fun SearchActorsScreen(navController: NavController) {
 
             Button(
                 onClick = { viewModel.searchMovies(actorQuery.text) },
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF331A79), // ✅ Your selected color
+                    contentColor = Color.White
+                )
+
             ) {
                 Text("Search")
             }

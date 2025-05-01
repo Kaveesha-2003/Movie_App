@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -66,10 +67,18 @@ fun SearchMoviesScreen(navController: NavController) {
             )
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                Button(onClick = { viewModel.searchMovie(searchQuery.text) }) {
+                Button(onClick = { viewModel.searchMovie(searchQuery.text) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF331A79), // ✅ Your selected color
+                        contentColor = Color.White
+                    )) {
                     Text("Retrieve Movie")
                 }
-                Button(onClick = { viewModel.saveMovieToDB() }) {
+                Button(onClick = { viewModel.saveMovieToDB() },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF331A79), // ✅ Your selected color
+                        contentColor = Color.White
+                    )) {
                     Text("Save Movie to DB")
                 }
             }

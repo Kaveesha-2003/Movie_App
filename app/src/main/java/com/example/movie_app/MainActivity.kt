@@ -3,12 +3,15 @@ package com.example.movie_app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -46,32 +49,102 @@ fun HomeScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Movie Vault") }
+                title = {
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Text(
+                            text = "Movie Vault",
+                            style = MaterialTheme.typography.headlineMedium
+                        )
+                    }
+                }
             )
         }
     ) { padding ->
-        Column(
+
+        BoxWithConstraints(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .padding(24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(24.dp)
         ) {
-            HomeButton(text = "Add Movies to DB") {
-                navController.navigate("add_movies")
-            }
+            if (maxWidth < 600.dp) {
+                // ✅ Portrait mode
+                Column(
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize()
+                ) {
 
-            HomeButton(text = "Search for Movies") {
-                navController.navigate("search_movies")
-            }
+                    Spacer(modifier = Modifier.height(90.dp))
 
-            HomeButton(text = "Search for Actors") {
-                navController.navigate("search_actors")
-            }
+                    Image(
+                        painter = painterResource(id = R.drawable.logo),
+                        contentDescription = "Movie Logo",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                    )
 
-            HomeButton(text = "Search Titles (OMDb)") {
-                navController.navigate("search_titles")
+                    Spacer(modifier = Modifier.height(115.dp))
+
+                    HomeButton(text = "Add Movies to DB") {
+                        navController.navigate("add_movies")
+                    }
+
+                    HomeButton(text = "Search for Movies") {
+                        navController.navigate("search_movies")
+                    }
+
+                    HomeButton(text = "Search for Actors") {
+                        navController.navigate("search_actors")
+                    }
+
+                    HomeButton(text = "Search Titles (OMDb)") {
+                        navController.navigate("search_titles")
+                    }
+                }
+            } else {
+                // ✅ Landscape mode
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+
+                    // Logo on LEFT
+                    Image(
+                        painter = painterResource(id = R.drawable.logo),
+                        contentDescription = "Movie Logo",
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    )
+
+                    // Buttons on RIGHT
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.weight(1f)
+                    ) {
+
+
+                        HomeButton(text = "Add Movies to DB") {
+                            navController.navigate("add_movies")
+                        }
+
+                        HomeButton(text = "Search for Movies") {
+                            navController.navigate("search_movies")
+                        }
+
+                        HomeButton(text = "Search for Actors") {
+                            navController.navigate("search_actors")
+                        }
+
+                        HomeButton(text = "Search Titles (OMDb)") {
+                            navController.navigate("search_titles")
+                        }
+                    }
+                }
             }
         }
     }
@@ -83,9 +156,15 @@ fun HomeButton(text: String, onClick: () -> Unit) {
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        shape = RoundedCornerShape(24.dp) // ✅ make it more rounded
+            .padding(vertical = 8.dp)
+            ,
+        shape = RoundedCornerShape(24.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFF331A79), // Blue shade
+            contentColor = Color.White
+        )
     ) {
         Text(text)
     }
 }
+
