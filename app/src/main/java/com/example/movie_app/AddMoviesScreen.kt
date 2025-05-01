@@ -3,8 +3,11 @@ package com.example.movie_app
 
 import android.content.Context
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -12,36 +15,53 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.movie_app.data.MovieDatabase
 import com.example.movie_app.model.Movie
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddMoviesScreen() {
+fun AddMoviesScreen(navController: NavController) {
     val context = LocalContext.current
     val viewModel: AddMoviesViewModel = viewModel(factory = AddMoviesViewModelFactory(context))
-    var added by remember { mutableStateOf(false) }
+    var added by rememberSaveable { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Button(onClick = {
-            viewModel.addMovies()
-            added = true
-        }) {
-            Text("Add Movies to DB")
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Add Movies") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigate("home") }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
         }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .padding(24.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Button(onClick = {
+                viewModel.addMovies()
+                added = true
+            }) {
+                Text("Add Movies to DB")
+            }
 
-        if (added) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text("✅ Movies added successfully!", color = MaterialTheme.colorScheme.primary)
+            if (added) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text("✅ Movies added successfully!", color = MaterialTheme.colorScheme.primary)
+            }
         }
     }
 }
+
 
 class AddMoviesViewModel(private val context: Context) : ViewModel() {
     private val movieDao = MovieDatabase.getDatabase(context).movieDao()
@@ -85,7 +105,7 @@ class AddMoviesViewModel(private val context: Context) : ViewModel() {
                     actors = "Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss",
                     plot = "Neo discovers the life he knows is an elaborate deception of an evil cyber-intelligence."
                 )
-                // ➕ You can add more later
+                // hardcoded movies.
             )
             movieDao.insertAll(movies)
         }

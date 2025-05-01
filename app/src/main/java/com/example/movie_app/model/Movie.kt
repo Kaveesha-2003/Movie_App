@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "movies")
 data class Movie(
-    @PrimaryKey val title: String,  // ✅ Now unique
+    @PrimaryKey val title: String,
     val year: String,
     val rated: String,
     val released: String,

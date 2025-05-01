@@ -2,63 +2,112 @@ package com.example.movie_app
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import androidx.navigation.NavController
 import org.json.JSONObject
 import java.net.URL
 
 data class SimpleMovie(val title: String, val year: String)
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchTitlesScreen() {
-    var query by remember { mutableStateOf(TextFieldValue("")) }
-    var results by remember { mutableStateOf<List<SimpleMovie>>(emptyList()) }
-    var error by remember { mutableStateOf<String?>(null) }
+fun SearchTitlesScreen(navController: NavController) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Top
-    ) {
-        OutlinedTextField(
-            value = query,
-            onValueChange = { query = it },
-            label = { Text("Enter title keyword (e.g. 'mat')") },
-            modifier = Modifier.fillMaxWidth()
-        )
+    var query by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue(""))
+    }
 
-        Button(
-            onClick = {
-                error = null
-                results = emptyList()
-                if (query.text.trim().isNotEmpty()) {
-                    fetchMovies(query.text) { movies, err ->
-                        results = movies
-                        error = err
+    var results by rememberSaveable { mutableStateOf<List<SimpleMovie>>(emptyList()) }
+
+    var error by rememberSaveable { mutableStateOf<String?>(null) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Search Titles (OMDb)") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigate("home") }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }
-            },
-            modifier = Modifier.padding(top = 8.dp)
-        ) {
-            Text("Search Titles")
+            )
         }
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .padding(padding)
+                .padding(24.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            item {
+                OutlinedTextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    label = { Text("Enter title keyword (e.g. 'mat')") },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-        Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = {
+                        error = null
+                        results = emptyList()
+                        if (query.text.trim().isNotEmpty()) {
+                            fetchMovies(query.text) { movies, err ->
+                                results = movies
+                                error = err
+                            }
+                        }
+                    },
+                    modifier = Modifier.padding(top = 8.dp)
+                ) {
+                    Text("Search Titles")
+                }
 
-        if (error != null) {
-            Text("Error: $error", color = MaterialTheme.colorScheme.error)
-        } else if (results.isEmpty()) {
-            Text("No results found.")
-        } else {
-            results.take(10).forEach { movie ->
-                Text("🎬 ${movie.title} (${movie.year})")
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
+
+                error?.let {
+                    Text("Error: $it", color = MaterialTheme.colorScheme.error)
+                }
+
+                if (results.isEmpty() && error == null) {
+                    Text("No results found.")
+                }
+            }
+
+            items(results.take(10)) { movie ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "🎬 ${movie.title}",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = "Year: ${movie.year}",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
             }
         }
     }

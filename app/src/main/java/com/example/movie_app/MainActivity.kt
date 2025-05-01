@@ -4,11 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.movie_app.ui.theme.Movie_AppTheme
@@ -30,52 +32,60 @@ fun AppNavigator() {
 
     NavHost(navController = navController, startDestination = "home") {
         composable("home") { HomeScreen(navController) }
-        composable("add_movies") { AddMoviesScreen() }
-        composable("search_movies") { SearchMoviesScreen() }
-        composable("search_actors") { SearchActorsScreen() }
-        composable("search_titles") { SearchTitlesScreen() }
+        composable("add_movies") { AddMoviesScreen(navController) }
+        composable("search_movies") { SearchMoviesScreen(navController) }
+        composable("search_actors") { SearchActorsScreen(navController) }
+        composable("search_titles") { SearchTitlesScreen(navController) }
 
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController) {
-    Column(
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Movie Vault") }
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            HomeButton(text = "Add Movies to DB") {
+                navController.navigate("add_movies")
+            }
+
+            HomeButton(text = "Search for Movies") {
+                navController.navigate("search_movies")
+            }
+
+            HomeButton(text = "Search for Actors") {
+                navController.navigate("search_actors")
+            }
+
+            HomeButton(text = "Search Titles (OMDb)") {
+                navController.navigate("search_titles")
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeButton(text: String, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
         modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        shape = RoundedCornerShape(24.dp) // ✅ make it more rounded
     ) {
-        Button(
-            onClick = { navController.navigate("add_movies") },
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-        ) {
-            Text("Add Movies to DB")
-        }
-
-        Button(
-            onClick = { navController.navigate("search_movies") },
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-        ) {
-            Text("Search for Movies")
-        }
-
-
-        Button(
-            onClick = { navController.navigate("search_actors") },
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-        ) {
-            Text("Search for Actors")
-        }
-
-        Button(
-            onClick = { navController.navigate("search_titles") },
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-        ) {
-            Text("Search Titles (OMDb)")
-        }
-
-
+        Text(text)
     }
 }
