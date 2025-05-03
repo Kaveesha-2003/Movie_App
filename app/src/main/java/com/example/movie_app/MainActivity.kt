@@ -82,7 +82,7 @@ fun HomeScreen(navController: NavHostController) {
                         contentDescription = "Movie Logo",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(200.dp)
+                            .height(250.dp)
                     )
 
                     Spacer(modifier = Modifier.height(115.dp))

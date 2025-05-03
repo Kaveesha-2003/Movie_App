@@ -93,13 +93,13 @@ fun SearchActorsScreen(navController: NavController) {
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
                         shape = RoundedCornerShape(12.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFE2D6FD))
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
                                 text = "🎬 ${movie.title} (${movie.year})",
                                 style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.primary
+                                color = Color(0xFF331A79)
                             )
 
                             Spacer(modifier = Modifier.height(8.dp))

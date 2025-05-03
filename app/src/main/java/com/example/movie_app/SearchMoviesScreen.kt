@@ -91,13 +91,13 @@ fun SearchMoviesScreen(navController: NavController) {
                         .fillMaxWidth()
                         .padding(16.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFE2D6FD))
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
                             text = movie.title,
                             style = MaterialTheme.typography.headlineSmall,
-                            color = MaterialTheme.colorScheme.primary
+                            color = Color(0xFF331A79)
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -119,7 +119,7 @@ fun SearchMoviesScreen(navController: NavController) {
 
             viewModel.error?.let { error ->
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = error, color = MaterialTheme.colorScheme.error)
+                Text(text = error, color = Color(0xFF331A79))
             }
         }
     }
